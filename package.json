@@ -15,7 +15,10 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
+    "react-to-print": "^2.14.12",
     "react-validation": "^3.0.7",
+    "react-with-params": "^0.2.0",
+    "use-url-search-params": "^2.5.1",
     "validator": "^13.9.0",
     "web-vitals": "^2.1.4"
   },

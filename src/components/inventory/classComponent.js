@@ -1,9 +1,8 @@
 import { createRef, Component } from 'react';
 import Form from "react-validation/build/form";
 import Table from '@mui/material/Table';
-import { Button } from "bootstrap";
 import Input from "react-validation/build/input";
-
+import { Routes, Route, Link } from "react-router-dom";
 
 
 const required = value => {
@@ -96,8 +95,7 @@ export default class AddInventory extends Component{
     render() {
         return (
             <div>
-                
-                <Form onSubmit={this.add} ref={c => {
+            <Form onSubmit={this.add} ref={c => {
               this.form = c;
             }}
           >
@@ -127,7 +125,12 @@ export default class AddInventory extends Component{
                     <button className="btn btn-primary" type="submit">
                         Add to Inventory
             </button>
-                    </div>
+                <Link to={"/pdf"} className="btn btn-success">
+                    Descargar pdf
+                </Link>
+            <li className="nav-item">
+            </li>
+              </div>
                 </div>
                     )}
 

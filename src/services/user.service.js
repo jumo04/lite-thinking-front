@@ -12,6 +12,12 @@ class UserService {
     return axios.get(API_URL + 'user', { headers: authHeader() });
   }
 
+  getEnterprise(nit) {
+    return axios.put('http://localhost:8080/api/enterprise', {
+      nit
+    }, { headers: authHeader() });
+  }
+
   getAdminBoard() {
     return axios.get(API_URL + 'admin', { headers: authHeader() });
   }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -12,8 +12,10 @@ import Home from "../dashboard/Home";
 import Profile from "../profile/Profile";
 import BoardUser from "../dashboard/Board-user";
 import BoardAdmin from "../dashboard/Board-admin";
+import PdfComponent from '../pdf/PdfComponent';
 
 import AddInventory from '../inventory/classComponent';
+import EditPrise from "../register/EditPrise";
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +30,7 @@ class App extends Component {
 
   componentDidMount() {
     const user = AuthService.getCurrentUser();
-
+    
     if (user) {
       this.setState({
         currentUser: user,
@@ -47,7 +49,6 @@ class App extends Component {
 
   render() {
     const { currentUser, showAdminBoard } = this.state;
-
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -66,6 +67,7 @@ class App extends Component {
                 Agregar Inventario
               </Link>
             </li>
+
 
             {showAdminBoard && (
               <li className="nav-item">
@@ -125,6 +127,8 @@ class App extends Component {
             <Route path="/user" element={<BoardUser />} />
             <Route path="/admin" element={<BoardAdmin />} />
             <Route path="/addinventory" element={<AddInventory />} />
+            <Route path="/pdf" element={<PdfComponent />} />
+            <Route path="/editprise/:slug" element={<EditPrise />}  />
           </Routes>
         </div>
       </div>

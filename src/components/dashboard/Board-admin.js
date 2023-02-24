@@ -10,19 +10,35 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Navigate } from "react-router-dom";
 
-import { Button } from "bootstrap";
-import { dividerClasses } from "@mui/material";
+// import Params from './params';
 
-export default class BoardUser extends Component {
-  
+
+import { withRouter } from '../../common/with-router';
+
+
+
+export default class AdminBoard extends Component {
+
   constructor(props) {
     super(props);
+    // this.Params = this.Params.bind(this);
+    // this.Params = this.Params.bind(this)
+
 
     this.state = {
-      enterprises: []
+      setData: "",
+      data: "",
+      enterprises: [],
+      enterprise: []
     };
   }
+
+  // Params(nit){
+  //   console.log(nit);
+    
+  // }
 
   handleDelete(e) {
     e.preventdefault()
@@ -74,6 +90,36 @@ export default class BoardUser extends Component {
     );
   }
 
+  edit = (event) => {
+    console.log(event.target.value);
+    window.location.replace("/editprise/" + event.target.value);
+  }
+
+  delete = (event) => {
+    console.log(event.target.value);
+    AuthService.deleteEnterprise( event.target.value).then(
+      response => {
+        this.setState({
+          message: response.data.message,
+          successful: true
+        });
+      },
+      error => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+  
+        this.setState({
+          successful: false,
+          message: resMessage
+        });
+      }
+    );
+    window.location.reload();
+  }
   
   render() {
     return (
@@ -106,7 +152,8 @@ export default class BoardUser extends Component {
                   <TableCell align="right">{row.address}</TableCell>
                   <TableCell align="right">{row.phone}</TableCell>
                   <TableCell align="right"><a href="#"> download</a> </TableCell>
-                  <TableCell align="right"> <button className="btn btn-primary "> Editar</button> <button className="btn btn-primary btn-danger" > Eliminar</button></TableCell>
+                  <TableCell align="right"> <button className="btn btn-primary" onClick={event => this.edit(event)} value={row.nit}>Editar </button> 
+                  <button className="btn btn-primary btn-danger" onClick={event => this.delete(event)} value={row.nit} > Eliminar</button></TableCell>
 
                 </TableRow>
               ))}

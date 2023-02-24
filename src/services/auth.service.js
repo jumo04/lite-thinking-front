@@ -41,14 +41,18 @@ class AuthService {
     }, { headers: authHeader() });
   }
 
-  updateEnterprise(nit) {
+  updateEnterprise(nit, name, address, phone, user) {
     return axios.post(API_URL + "update", {
-      nit
+      nit, 
+      name, 
+      address, 
+      phone, 
+      user
     }, { headers: authHeader() });
   }
 
   deleteEnterprise(nit) {
-    return axios.post(API_URL + "delete", {
+    return axios.put("http://localhost:8080/api/delete", {
       nit
     }, { headers: authHeader() });
   }
