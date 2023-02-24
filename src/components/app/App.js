@@ -7,10 +7,13 @@ import AuthService from "../../services/auth.service";
 
 import Login from "../login/Login";
 import Register from "../register/Register";
+import RegisterEnterprise from "../register/EnterpriseRegister";
 import Home from "../dashboard/Home";
 import Profile from "../profile/Profile";
 import BoardUser from "../dashboard/Board-user";
 import BoardAdmin from "../dashboard/Board-admin";
+
+import AddInventory from '../inventory/classComponent';
 
 class App extends Component {
   constructor(props) {
@@ -58,6 +61,12 @@ class App extends Component {
               </Link>
             </li>
 
+            <li className="nav-item">
+              <Link to={"/addinventory"} className="nav-link">
+                Agregar Inventario
+              </Link>
+            </li>
+
             {showAdminBoard && (
               <li className="nav-item">
                 <Link to={"/admin"} className="nav-link">
@@ -84,7 +93,7 @@ class App extends Component {
               </li>
               <li className="nav-item">
                 <a href="/login" className="nav-link" onClick={this.logOut}>
-                  LogOut
+                  Salir
                 </a>
               </li>
             </div>
@@ -92,13 +101,13 @@ class App extends Component {
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link to={"/login"} className="nav-link">
-                  Login
+                  Ingresar
                 </Link>
               </li>
 
               <li className="nav-item">
                 <Link to={"/register"} className="nav-link">
-                  Sign Up
+                  Registrarse
                 </Link>
               </li>
             </div>
@@ -111,9 +120,11 @@ class App extends Component {
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/registerenterprise" element={<RegisterEnterprise />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/user" element={<BoardUser />} />
             <Route path="/admin" element={<BoardAdmin />} />
+            <Route path="/addinventory" element={<AddInventory />} />
           </Routes>
         </div>
       </div>

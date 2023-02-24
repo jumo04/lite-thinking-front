@@ -1,12 +1,13 @@
 import axios from "axios";
+import authHeader from './auth-header';
 
 const API_URL = "http://localhost:8080/api/auth/";
 
 class AuthService {
-  login(username, password) {
+  login(email, password) {
     return axios
       .post(API_URL + "signin", {
-        username,
+        email,
         password
       })
       .then(response => {
@@ -28,6 +29,28 @@ class AuthService {
       email,
       password
     });
+  }
+
+  registerEnterprise(nit, name, address, phone, user) {
+    return axios.post(API_URL + "createnterprise", {
+      nit, 
+      name, 
+      address, 
+      phone, 
+      user
+    }, { headers: authHeader() });
+  }
+
+  updateEnterprise(nit) {
+    return axios.post(API_URL + "update", {
+      nit
+    }, { headers: authHeader() });
+  }
+
+  deleteEnterprise(nit) {
+    return axios.post(API_URL + "delete", {
+      nit
+    }, { headers: authHeader() });
   }
 
   getCurrentUser() {
