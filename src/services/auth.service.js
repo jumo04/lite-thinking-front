@@ -3,7 +3,7 @@ import authHeader from './auth-header';
 
 // const API_URL = "http://localhost:8080/api/auth/";
 
-const API_URL_AWS = "http://lite-thinking-back.herokuapp.com/api/auth/";
+const API_URL_AWS = "https://lite-thinking-back.herokuapp.com/api/auth/";
 
 class AuthService {
   login(email, password) {
