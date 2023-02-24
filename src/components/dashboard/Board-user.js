@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,8 +6,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-import axios from 'axios';
 
 import UserService from "../../services/user.service";
 
@@ -24,7 +22,6 @@ export default class BoardUser extends Component {
 
   componentDidMount() {
     UserService.getUserBoard().then(response => {
-      const data = response;
         this.setState({
                 enterprises: response.data
             });
@@ -55,8 +52,6 @@ export default class BoardUser extends Component {
               <TableCell align="right">Nombre</TableCell>
               <TableCell align="right">Direccion</TableCell>
               <TableCell align="right">Telefono</TableCell>
-              <TableCell align="right">Inventario</TableCell>
-              <TableCell align="right">Opciones Admin {this.state.data} </TableCell>
             </TableRow>
             </TableHead>
             <TableBody>

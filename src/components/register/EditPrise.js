@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { Routes, Route, useParams } from 'react-router-dom';
 
 
 import AuthService from "../../services/auth.service";
@@ -34,13 +33,6 @@ const vunit = value => {
 };
 
 
-// function Params(){
-//   // const [searchParams, setSearchParams] = useSearchParams();
-//   const [params, setParams] = useUrlSearchParams({ id });
-// 
-//   // console.log(searchParams("id"));
-//   // return searchParams("id");
-// }
 
 
 
@@ -68,7 +60,6 @@ export default class EditPrise extends Component {
     const nit =answer_array[answer_array.length-1];
     console.log(nit);
     UserService.getEnterprise(nit).then(response => {
-        const data = response;
         // console.log(response.data);
         this.setState ({
           enterprise: response.data,
@@ -77,7 +68,6 @@ export default class EditPrise extends Component {
           address: response.data.address,
           phone: response.data.phone
         });
-        // Params.App(event.target.value); 
        
       },
       error => {
@@ -95,9 +85,7 @@ export default class EditPrise extends Component {
   }
 
   componentDidMount() {
-    // const nit = this.Params();
     const user = AuthService.getCurrentUser();
-    // const nit = Params.GetParams();
 
     if (!user || !user.roles.includes("ROLE_ADMIN")) this.setState({ redirect: "/home" });
     this.setState({ currentUser: user, userReady: true })

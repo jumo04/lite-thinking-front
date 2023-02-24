@@ -10,12 +10,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Navigate } from "react-router-dom";
 
 // import Params from './params';
 
 
-import { withRouter } from '../../common/with-router';
 
 
 
@@ -23,9 +21,6 @@ export default class AdminBoard extends Component {
 
   constructor(props) {
     super(props);
-    // this.Params = this.Params.bind(this);
-    // this.Params = this.Params.bind(this)
-
 
     this.state = {
       setData: "",
@@ -35,10 +30,6 @@ export default class AdminBoard extends Component {
     };
   }
 
-  // Params(nit){
-  //   console.log(nit);
-    
-  // }
 
   handleDelete(e) {
     e.preventdefault()
@@ -134,7 +125,6 @@ export default class AdminBoard extends Component {
                   <TableCell align="right">Nombre</TableCell>
                   <TableCell align="right">Direccion</TableCell>
                   <TableCell align="right">Telefono</TableCell>
-                  <TableCell align="right">Inventario</TableCell>
                   <TableCell align="right">Opciones Admin </TableCell>
                 </TableRow>
                 </TableHead>
@@ -151,7 +141,6 @@ export default class AdminBoard extends Component {
                   <TableCell align="right">{row.name}</TableCell>
                   <TableCell align="right">{row.address}</TableCell>
                   <TableCell align="right">{row.phone}</TableCell>
-                  <TableCell align="right"><a href="#"> download</a> </TableCell>
                   <TableCell align="right"> <button className="btn btn-primary" onClick={event => this.edit(event)} value={row.nit}>Editar </button> 
                   <button className="btn btn-primary btn-danger" onClick={event => this.delete(event)} value={row.nit} > Eliminar</button></TableCell>
 
