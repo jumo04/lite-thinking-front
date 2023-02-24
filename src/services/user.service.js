@@ -2,7 +2,7 @@ import axios from 'axios';
 import authHeader from './auth-header';
 
 const API_URL = 'http://localhost:8080/api/test/';
-const API_URL_AWS = 'https://main.d23zqw3sbnrvm5.amplifyapp.com/api/test/';
+const API_URL_AWS = 'https://lite-thinking-back.herokuapp.com/api/test/';
 
 
 
@@ -16,7 +16,7 @@ class UserService {
   }
 
   getEnterprise(nit) {
-    return axios.put('https://main.d23zqw3sbnrvm5.amplifyapp.com/api/enterprise', {
+    return axios.put('https://lite-thinking-back.herokuapp.com/api/enterprise', {
       nit
     }, { headers: authHeader() });
   }
