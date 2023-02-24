@@ -8,11 +8,11 @@ const API_URL_AWS = 'https://lite-thinking-back.herokuapp.com/api/test/';
 
 class UserService {
   getPublicContent() {
-    return axios.get(API_URL_AWS + 'all');
+    return axios.get('https://lite-thinking-back.herokuapp.com/api/test/' + 'all');
   }
 
   getUserBoard() {
-    return axios.get(API_URL_AWS + 'user', { headers: authHeader() });
+    return axios.get('https://lite-thinking-back.herokuapp.com/api/test/' + 'user', { headers: authHeader() });
   }
 
   getEnterprise(nit) {
