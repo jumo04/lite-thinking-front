@@ -3,7 +3,7 @@ import authHeader from './auth-header';
 
 // const API_URL = "http://localhost:8080/api/auth/";
 
-const API_URL_AWS = "https://lite-thinking-back.herokuapp.com/api/auth/";
+const API_URL_AWS = "http://54.237.60.164:8080/api/auth/";
 
 class AuthService {
   login(email, password) {
@@ -51,10 +51,11 @@ class AuthService {
       phone, 
       user
     }, { headers: authHeader() });
+    
   }
 
   deleteEnterprise(nit) {
-    return axios.put("http://lite-thinking-back.herokuapp.com/api/delete", {
+    return axios.put("http://54.237.60.164:8080/api/delete", {
       nit
     }, { headers: authHeader() });
   }

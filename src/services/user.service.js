@@ -2,13 +2,13 @@ import axios from 'axios';
 import authHeader from './auth-header';
 
 // const API_URL = 'http://localhost:8080/api/test/';
-const API_URL_AWS = 'https://lite-thinking-back.herokuapp.com/api/test/';
+const API_URL_AWS = 'http://54.237.60.164:8080/api/test/';
 
 
 
 class UserService {
   getPublicContent() {
-    return axios.get("https://lite-thinking-back.herokuapp.com/api/test/all");
+    return axios.get("http://54.237.60.164:8080/api/test/all");
   }
 
   getUserBoard() {
@@ -16,7 +16,7 @@ class UserService {
   }
 
   getEnterprise(nit) {
-    return axios.put('https://lite-thinking-back.herokuapp.com/api/enterprise', {
+    return axios.put('http://54.237.60.164:8080/api/enterprise', {
       nit
     }, { headers: authHeader() });
   }
