@@ -1,14 +1,14 @@
 import axios from "axios";
 import authHeader from './auth-header';
 
-// const API_URL = "http://localhost:8080/api/auth/";
+const API_URL = "http://localhost:8080/api/auth/";
 
 const API_URL_AWS = "https://54.237.60.164.nip.io/api/auth/";
 
 class AuthService {
   login(email, password) {
     return axios
-      .post(API_URL_AWS + "signin", {
+      .post(API_URL + "signin", {
         email,
         password
       })
@@ -26,7 +26,7 @@ class AuthService {
   }
 
   register(username, email, password) {
-    return axios.post(API_URL_AWS + "signup", {
+    return axios.post(API_URL + "signup", {
       username,
       email,
       password
@@ -34,7 +34,7 @@ class AuthService {
   }
 
   registerEnterprise(nit, name, address, phone, user) {
-    return axios.post(API_URL_AWS + "createnterprise", {
+    return axios.post(API_URL + "createnterprise", {
       nit, 
       name, 
       address, 
@@ -44,7 +44,7 @@ class AuthService {
   }
 
   updateEnterprise(nit, name, address, phone, user) {
-    return axios.post(API_URL_AWS + "update", {
+    return axios.post(API_URL + "update", {
       nit, 
       name, 
       address, 
