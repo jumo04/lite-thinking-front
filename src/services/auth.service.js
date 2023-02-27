@@ -3,7 +3,7 @@ import authHeader from './auth-header';
 
 // const API_URL = "http://localhost:8080/api/auth/";
 
-const API_URL_AWS = "http://54.237.60.164:8080/api/auth/";
+const API_URL_AWS = "https://54.237.60.164.nip.io/api/auth/";
 
 class AuthService {
   login(email, password) {
@@ -55,7 +55,7 @@ class AuthService {
   }
 
   deleteEnterprise(nit) {
-    return axios.put("http://54.237.60.164:8080/api/delete", {
+    return axios.put("https://54.237.60.164.nip.io/api/delete", {
       nit
     }, { headers: authHeader() });
   }

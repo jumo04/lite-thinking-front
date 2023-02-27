@@ -2,13 +2,13 @@ import axios from 'axios';
 import authHeader from './auth-header';
 
 // const API_URL = 'http://localhost:8080/api/test/';
-const API_URL_AWS = 'http://54.237.60.164:8080/api/test/';
+const API_URL_AWS = 'https://54.237.60.164.nip.io/api/test/';
 
 
 
 class UserService {
   getPublicContent() {
-    return axios.get("http://54.237.60.164:8080/api/test/all");
+    return axios.get("https://54.237.60.164.nip/api/test/all");
   }
 
   getUserBoard() {
@@ -16,7 +16,7 @@ class UserService {
   }
 
   getEnterprise(nit) {
-    return axios.put('http://54.237.60.164:8080/api/enterprise', {
+    return axios.put('https://54.237.60.164.nip.io/api/enterprise', {
       nit
     }, { headers: authHeader() });
   }
