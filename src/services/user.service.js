@@ -8,7 +8,7 @@ const API_URL_AWS = 'https://54.237.60.164.nip.io/api/test/';
 
 class UserService {
   getPublicContent() {
-    return axios.get("https://54.237.60.164.nip.io/api/test/all");
+    return axios.get("http://localhost:8080/api/test/all");
   }
 
   getUserBoard() {
