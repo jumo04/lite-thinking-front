@@ -2,6 +2,12 @@ import React, { Component, useRef } from "react";
 import {ReactToPrint, useReactToPrint} from 'react-to-print';
 import DataComponent from './DataComponent';
 
+import html2canvas from "html2canvas";
+import pdfMake from "pdfmake/build/pdfmake";
+import jsPdf from "jspdf";
+import { width } from "@mui/system";
+
+
 
 
 
@@ -10,24 +16,25 @@ export default class PdfComponent extends Component  {
 
   constructor(props) {
     super(props);
-    this.onChange = this.onChange.bind(this);
+    // this.onChange = this.onChange.bind(this);
     this.onLoad = this.onLoad.bind(this);
     this.getBase64 = this.getBase64.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handlePrint = this.handlePrint.bind(this);
+    this.printPDf = this.printPDf.bind(this);
 
     this.state = {
       content: "",
       message: "",
-      base64: ""
+      base64: "",
+      pdf: ""
     };
   }
 
-  onChange(e) {
-    const files = e.target.files;
-    const file = files[0];
-    this.getBase64(file);
-  }
+  // onChange(e) {
+  //   const files = e.target.files;
+  //   const file = files[0];
+  //   this.getBase64(file);
+  // }
 
   onLoad(fileString){
     this.setState({base64: fileString})
@@ -41,8 +48,8 @@ export default class PdfComponent extends Component  {
     }
   }
 
-  handleSubmit(e){
-    e.preventDefault();
+  handleSubmit(){
+    // e.preventDefault();
 
     
     fetch("https://cbggv12zcd.execute-api.us-east-1.amazonaws.com/sendemail", {
@@ -63,23 +70,72 @@ export default class PdfComponent extends Component  {
     })
   }
   
+  printPDf(){
+    const domElement = document.getElementById("print_to_pdf");
+   
+    html2canvas(domElement).then((canvas) => {
+      var data = canvas.toDataURL();
+      var pdfExportSetting = {
+        content: [
+          {
+            image: data,
+            width: 500
+          }
+        ]
+      };
+      const pdfDocGenerator = pdfMake.createPdf(pdfExportSetting);
 
+      pdfDocGenerator.getBase64((encodedString) => {
+        console.log(encodedString);
+          this.setState({
+            base64: encodedString
+       });
+        this.handleSubmit();
+      });
+      // pdfDocGenerator.getBase64((data) => {
+      //   // alert(data);
+      //   this.setState({
+      //     base64: data,
+      //     pdf: data
+      //  });
+      // });
+      
+      const doc = new jsPdf();
+      // doc.save('download.pdf');
+      
+    });
+
+  }
 
     render() {
       return (
         <div>
-          <ReactToPrint
-            content={() => this.componentRef}
-            trigger={() => <button className="btn btn-primary">Print to PDF!</button>}
-          />
-          <DataComponent ref={(response) => (this.componentRef = response)} />
-
           {/* <ReactToPrint
             content={() => this.componentRef}
-            trigger={() => <button onClick={this.handleSubmit} className="btn btn-success">Send PDF</button>}
+            trigger={() => <button className="btn btn-primary">Print to PDF!</button>}
           /> */}
 
+          <span id="print_to_pdf">
+            <DataComponent ref={(response) => (this.componentRef = response)} />
+          </span>
 
+          <button onClick={this.printPDf} className="btn btn-success">Send PDF</button>
+          {/* <ReactToPrint
+            content={() => this.componentRef}
+            trigger={() => }
+          /> */}
+
+      {!!this.state.pdf && (
+        <div>
+          {/* you can view the PDF here */}
+          <object
+            type="application/pdf"
+            width={400}
+            height={400}
+            data={this.state.pdf}
+          />
+        </div>
+      )}
         </div>
       );
     }
