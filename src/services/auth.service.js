@@ -55,7 +55,7 @@ class AuthService {
   }
 
   deleteEnterprise(nit) {
-    return axios.put("https://54.237.60.164.nip.io/api/delete", {
+    return axios.put("http://localhost:8080/api/delete", {
       nit
     }, { headers: authHeader() });
   }
