@@ -3,6 +3,11 @@ import Form from "react-validation/build/form";
 import Table from '@mui/material/Table';
 import Input from "react-validation/build/input";
 import { Routes, Route, Link } from "react-router-dom";
+import pdfMake from "pdfmake/build/pdfmake";
+import AuthService from "../../services/auth.service";
+
+import PdfComponent from '../pdf/PdfComponent';
+import html2canvas from "html2canvas";
 
 
 const required = value => {
@@ -19,15 +24,24 @@ const required = value => {
 export default class AddInventory extends Component{
     constructor(props) {
         super(props);
+        const currentUser = AuthService.getCurrentUser();
         this.onChangeName = this.onChangeName.bind(this);
         this.onChangePrice= this.onChangePrice.bind(this);
         this.onChangeQty = this.onChangeQty.bind(this);
+        this.printPDf = this.printPDf.bind(this);
+        this.sendPDf = this.sendPDf.bind(this);
+        this.sendEmail = this.sendEmail.bind(this);
+
     
         this.state = {
             name: "",
             price: "",
             qty: "",
-            products: []
+            products: [],
+            currentUser: currentUser.username,
+            base64: "",
+            message: "",
+            successful: false
         }
         this.form = createRef();
     }
@@ -48,6 +62,92 @@ export default class AddInventory extends Component{
           qty: e.target.value
         });
       }
+
+      printPDf(e){
+        e.preventDefault();
+        const domElement = document.getElementById("print_to_pdf");
+        var buttons = document.getElementsByClassName("button_hide");
+        document.getElementById("hidden").style.visibility = "hidden";
+        for(var i = 0; i < buttons.length; i++) {
+            buttons[i].style.visibility = "hidden";
+        }
+        html2canvas(domElement).then((canvas) => {
+          var data = canvas.toDataURL();
+          var pdfExportSetting = {
+            content: [
+              {
+                image: data,
+                width: 500
+              }
+            ]
+          };
+        const pdfDocGenerator = pdfMake.createPdf(pdfExportSetting).download("lite-download" + this.state.currentUser);
+        for(var i = 0; i < buttons.length; i++) {
+            buttons[i].style.visibility = "visible";
+          }
+        document.getElementById("hidden").style.visibility = "visible";
+        });
+    
+      }
+
+      sendPDf(e){
+        e.preventDefault();
+        const domElement = document.getElementById("print_to_pdf");
+        var buttons = document.getElementsByClassName("button_hide");
+        document.getElementById("hidden").style.visibility = "hidden";
+        for(var i = 0; i < buttons.length; i++) {
+            buttons[i].style.visibility = "hidden";
+        }
+        html2canvas(domElement).then((canvas) => {
+        var data = canvas.toDataURL();
+        var pdfExportSetting = {
+            content: [
+            {
+                image: data,
+                width: 500
+            }
+            ]
+        };
+        const pdfDocGenerator = pdfMake.createPdf(pdfExportSetting);
+
+        pdfDocGenerator.getBase64((encodedString) => {
+            console.log(encodedString);
+            this.setState({
+                base64: encodedString
+        });
+
+            this.sendEmail();
+        });
+        for(var i = 0; i < buttons.length; i++) {
+            buttons[i].style.visibility = "visible";
+          }
+        document.getElementById("hidden").style.visibility = "visible";
+
+        });
+      }
+
+      sendEmail(){
+        // e.preventDefault();
+    
+        fetch("https://cbggv12zcd.execute-api.us-east-1.amazonaws.com/sendemail", {
+          mode: "no-cors",
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            senderName: "siyah44048@wifame.com",
+            senderEmail: "siyah44048@wifame.com",
+            message: "Hola este deberia ser el archivo final",
+            base64Data: this.state.base64,
+            date: new Date(),
+            fileName: "lite-download" + this.state.currentUser
+          })
+        })
+      }
+
+
     // addproduct handler method
 
     add = (event) => {
@@ -92,9 +192,13 @@ export default class AddInventory extends Component{
         });
     }
 
+   
+    
+
     render() {
         return (
-            <div>
+        <div>
+            <div className='d-flex justify-content-center'>
             <Form onSubmit={this.add} ref={c => {
               this.form = c;
             }}
@@ -124,10 +228,8 @@ export default class AddInventory extends Component{
                     <div className='form-group'>
                     <button className="btn btn-primary" type="submit">
                         Add to Inventory
-            </button>
-                <Link to={"/pdf"} className="btn btn-success">
-                    Descargar pdf
-                </Link>
+                    </button>
+            
             <li className="nav-item">
             </li>
               </div>
@@ -149,36 +251,44 @@ export default class AddInventory extends Component{
                 </div>
                 )}
                 </Form>
-                <Table >
-                    <thead>
-                        <tr>
-                            <th>Index</th>
-                            <th>Product Name:</th>
-                            <th>Price</th>
-                            <th>Qty</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            this.state.products.map((item, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{index}</td>
-                                        <td>{item.product_name}</td>
-                                        <td>{item.price}</td>
-                                        <td>{item.qty}</td>
-                                        <td>
-                                            <button className='btn btn-success' onClick={event => this.increQty(event)} value={index}>+</button>
-                                            
-                                            <button className='btn btn-danger' onClick={event => this.decreQty(event)} value={index}>-</button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </Table>
+                <div className='button_group'>
+                    <button onClick={this.printPDf} className="btn btn-success me-1">Descargar PDF</button>
+                    <button onClick={this.sendPDf} className="btn btn-success ms-2">Enviar PDF</button>
+                </div>
+                </div>
+                
+                <span id='print_to_pdf'>
+                    <Table >
+                        <thead>
+                            <tr>
+                                <th>Index</th>
+                                <th>Product Name:</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th id='hidden'>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.products.map((item, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index}</td>
+                                            <td>{item.product_name}</td>
+                                            <td>{item.price}</td>
+                                            <td>{item.qty}</td>
+                                            <td>
+                                                <button  className='button_hide btn btn-success' onClick={event => this.increQty(event)} value={index}>+</button>
+                                                
+                                                <button  className='button_hide btn btn-danger' onClick={event => this.decreQty(event)} value={index}>-</button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </span>
                 
             </div>            
         )

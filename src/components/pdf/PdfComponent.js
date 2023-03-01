@@ -19,7 +19,7 @@ export default class PdfComponent extends Component  {
     // this.onChange = this.onChange.bind(this);
     this.onLoad = this.onLoad.bind(this);
     this.getBase64 = this.getBase64.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.sendEmail = this.sendEmail.bind(this);
     this.printPDf = this.printPDf.bind(this);
 
     this.state = {
@@ -48,7 +48,7 @@ export default class PdfComponent extends Component  {
     }
   }
 
-  handleSubmit(){
+  sendEmail(base64){
     // e.preventDefault();
 
     
@@ -63,7 +63,7 @@ export default class PdfComponent extends Component  {
         senderName: "siyah44048@wifame.com",
         senderEmail: "siyah44048@wifame.com",
         message: "hola este es desde react lite ",
-        base64Data: this.state.base64,
+        base64Data: base64,
         date: new Date(),
         fileName: "TEST_FILE_NAME"
       })
@@ -90,7 +90,7 @@ export default class PdfComponent extends Component  {
           this.setState({
             base64: encodedString
        });
-        this.handleSubmit();
+        this.sendEmail();
       });
       // pdfDocGenerator.getBase64((data) => {
       //   // alert(data);
@@ -125,17 +125,6 @@ export default class PdfComponent extends Component  {
             trigger={() => }
           /> */}
 
-      {!!this.state.pdf && (
-        <div>
-          {/* you can view the PDF here */}
-          <object
-            type="application/pdf"
-            width={400}
-            height={400}
-            data={this.state.pdf}
-          />
-        </div>
-      )}
         </div>
       );
     }

@@ -21,12 +21,17 @@ export default class AdminBoard extends Component {
 
   constructor(props) {
     super(props);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.edit = this.edit.bind(this);
+    this.delete = this.delete.bind(this);
 
     this.state = {
       setData: "",
       data: "",
       enterprises: [],
-      enterprise: []
+      enterprise: [],
+      message: "",
+      successful: false
     };
   }
 
