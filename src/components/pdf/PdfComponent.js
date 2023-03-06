@@ -1,6 +1,6 @@
 import React, { Component, useRef } from "react";
 import {ReactToPrint, useReactToPrint} from 'react-to-print';
-import DataComponent from './DataComponent';
+import DataComponent from '../inventory/DataComponent';
 
 import html2canvas from "html2canvas";
 import pdfMake from "pdfmake/build/pdfmake";
@@ -100,7 +100,7 @@ export default class PdfComponent extends Component  {
       //  });
       // });
       
-      const doc = new jsPdf();
+      // const doc = new jsPdf();
       // doc.save('download.pdf');
       
     });

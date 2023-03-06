@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 
 import UserService from "../../services/user.service";
 
@@ -9,7 +9,6 @@ export default class Home extends Component {
     this.onChange = this.onChange.bind(this);
     this.onLoad = this.onLoad.bind(this);
     this.getBase64 = this.getBase64.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = {
       content: "",
@@ -36,26 +35,26 @@ export default class Home extends Component {
     }
   }
 
-  handleSubmit(e){
-    e.preventDefault();
+  // handleSubmit(e){
+  //   e.preventDefault();
 
-    fetch("https://cbggv12zcd.execute-api.us-east-1.amazonaws.com/sendemail", {
-      mode: "no-cors",
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        senderName: "siyah44048@wifame.com",
-        senderEmail: "siyah44048@wifame.com",
-        message: "hola este es desde react lite ",
-        base64Data: this.state.base64,
-        date: new Date(),
-        fileName: "TEST_FILE_NAME"
-      })
-    })
-  }
+  //   fetch("https://cbggv12zcd.execute-api.us-east-1.amazonaws.com/sendemail", {
+  //     mode: "no-cors",
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       senderName: "siyah44048@wifame.com",
+  //       senderEmail: "siyah44048@wifame.com",
+  //       message: "hola este es desde react lite ",
+  //       base64Data: this.state.base64,
+  //       date: new Date(),
+  //       fileName: "TEST_FILE_NAME"
+  //     })
+  //   })
+  // }
 
   componentDidMount() {
 
@@ -82,11 +81,11 @@ export default class Home extends Component {
         <header className="jumbotron">
           <h3>{this.state.content}</h3>
         </header>
-         <form>
+         {/* <form>
             <input type="file" accept="application/pdf" onChange={this.onChange}/>
          </form>
          <button onClick={this.handleSubmit}> enviar a lamnda</button>
-        
+         */}
       </div>
     );
   }

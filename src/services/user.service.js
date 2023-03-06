@@ -16,7 +16,7 @@ class UserService {
   }
 
   getEnterprise(nit) {
-    return axios.put('https://54.237.60.164.nip.io/api/enterprise', {
+    return axios.put('http://localhost:8080/api/enterprise', {
       nit
     }, { headers: authHeader() });
   }

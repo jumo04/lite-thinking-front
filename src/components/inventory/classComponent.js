@@ -1,13 +1,11 @@
 import { createRef, Component } from 'react';
 import Form from "react-validation/build/form";
-import Table from '@mui/material/Table';
 import Input from "react-validation/build/input";
-import { Routes, Route, Link } from "react-router-dom";
 import pdfMake from "pdfmake/build/pdfmake";
 import AuthService from "../../services/auth.service";
-
-import PdfComponent from '../pdf/PdfComponent';
+import ProductService from "../../services/product.service";
 import html2canvas from "html2canvas";
+
 
 
 const required = value => {
@@ -21,24 +19,28 @@ const required = value => {
   };
 
 
+  
+
 export default class AddInventory extends Component{
     constructor(props) {
         super(props);
         const currentUser = AuthService.getCurrentUser();
         this.onChangeName = this.onChangeName.bind(this);
+        this.onChangeRef = this.onChangeRef.bind(this);
         this.onChangePrice= this.onChangePrice.bind(this);
         this.onChangeQty = this.onChangeQty.bind(this);
-        this.printPDf = this.printPDf.bind(this);
         this.sendPDf = this.sendPDf.bind(this);
         this.sendEmail = this.sendEmail.bind(this);
 
     
         this.state = {
             name: "",
+            ref: "",
             price: "",
             qty: "",
             products: [],
             currentUser: currentUser.username,
+            email: currentUser.email,
             base64: "",
             message: "",
             successful: false
@@ -51,43 +53,44 @@ export default class AddInventory extends Component{
           name: e.target.value
         });
       }
-    
-      onChangePrice(e) {
+
+    onChangeRef(e) {
         this.setState({
+          ref: e.target.value
+        });
+      }
+    
+    onChangePrice(e) {
+      this.setState({
           price: e.target.value
         });
       }
-      onChangeQty(e) {
-        this.setState({
-          qty: e.target.value
-        });
-      }
+    onChangeQty(e) {
+      this.setState({
+        qty: e.target.value
+      });
+    }
 
-      printPDf(e){
-        e.preventDefault();
-        const domElement = document.getElementById("print_to_pdf");
-        var buttons = document.getElementsByClassName("button_hide");
-        document.getElementById("hidden").style.visibility = "hidden";
-        for(var i = 0; i < buttons.length; i++) {
-            buttons[i].style.visibility = "hidden";
-        }
-        html2canvas(domElement).then((canvas) => {
-          var data = canvas.toDataURL();
-          var pdfExportSetting = {
-            content: [
-              {
-                image: data,
-                width: 500
-              }
-            ]
-          };
-        const pdfDocGenerator = pdfMake.createPdf(pdfExportSetting).download("lite-download" + this.state.currentUser);
-        for(var i = 0; i < buttons.length; i++) {
-            buttons[i].style.visibility = "visible";
+      componentDidMount() {
+        ProductService.getProducts().then(response => {
+          this.state.products = response.data;
+              this.setState({
+                products: this.state.products
+            });
+          },
+          error => {
+            this.setState({
+              products:
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString()
+            });
           }
-        document.getElementById("hidden").style.visibility = "visible";
-        });
-    
+        );
+          console.log(this.state.products);
+      
       }
 
       sendPDf(e){
@@ -115,7 +118,6 @@ export default class AddInventory extends Component{
             this.setState({
                 base64: encodedString
         });
-
             this.sendEmail();
         });
         for(var i = 0; i < buttons.length; i++) {
@@ -138,7 +140,7 @@ export default class AddInventory extends Component{
           },
           body: JSON.stringify({
             senderName: "siyah44048@wifame.com",
-            senderEmail: "siyah44048@wifame.com",
+            senderEmail: this.state.email,
             message: "Hola este deberia ser el archivo final",
             base64Data: this.state.base64,
             date: new Date(),
@@ -164,24 +166,35 @@ export default class AddInventory extends Component{
         //console.log(formData.current)
         const newProduct = {
             product_name: this.state.name,
-            price: this.state.price,
-            qty: this.state.qty
+            ref: this.state.ref,
+            qty: this.state.qty,
+            price: this.state.price
         }
         // add a new product inside products array
         this.state.products.push(newProduct);
         this.setState({
             products: this.state.products
         });
+        console.log(this.state.qty);
+        ProductService.create(
+          this.state.name,
+          this.state.ref,
+          this.state.qty,
+          this.state.price,
+        );
+        
         //console.log(products);
     }
     // increment qty value by 1
     increQty = (event) => {
         //console.log(event.target.value)
         const indexOfArray = event.target.value;
+        console.log(this.state.products[indexOfArray].ref);
         this.state.products[indexOfArray].qty = parseInt(this.state.products[indexOfArray].qty) + 1   ;
-        this.setState({
+        this.setState({ 
             products: this.state.products
         });
+        ProductService.upgrade(this.state.products[indexOfArray].ref);
     }
     // decrement qty value by 1
     decreQty = (event) => {
@@ -190,15 +203,41 @@ export default class AddInventory extends Component{
         this.setState({
             products: this.state.products
         });
+        ProductService.downgrade(this.state.products[indexOfArray].ref);
     }
 
-   
+    delete = (event) => {
+      console.log(event.target.value);
+      ProductService.delete( this.state.products[event.target.value].ref).then(
+        response => {
+          this.setState({
+            message: response.data.message,
+            successful: true
+          });
+        },
+        error => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+    
+          this.setState({
+            successful: false,
+            message: resMessage
+          });
+        }
+      );
+      window.location.reload();
+    }
+    
     
 
     render() {
         return (
         <div>
-            <div className='d-flex justify-content-center'>
+            <div className=' justify-content-center'>
             <Form onSubmit={this.add} ref={c => {
               this.form = c;
             }}
@@ -210,6 +249,13 @@ export default class AddInventory extends Component{
                         <Input type="text" placeholder="Nombre del producto" name="product_name"
                         value={this.state.name}
                         onChange={this.onChangeName}
+                        validations={[required]}/> 
+                    </div>
+                    <div className="form-group" htmlFor="formBasicRef">
+                        <label>Ref:</label>
+                        <Input type="text" placeholder="Referencia del producto" name="ref"
+                        value={this.state.ref}
+                        onChange={this.onChangeRef}
                         validations={[required]}/> 
                     </div>
                     <div className="form-group" htmlFor="formBasicPrice">
@@ -229,9 +275,6 @@ export default class AddInventory extends Component{
                     <button className="btn btn-primary" type="submit">
                         Add to Inventory
                     </button>
-            
-            <li className="nav-item">
-            </li>
               </div>
                 </div>
                     )}
@@ -251,43 +294,73 @@ export default class AddInventory extends Component{
                 </div>
                 )}
                 </Form>
-                <div className='button_group'>
-                    <button onClick={this.printPDf} className="btn btn-success me-1">Descargar PDF</button>
-                    <button onClick={this.sendPDf} className="btn btn-success ms-2">Enviar PDF</button>
+                <div className='button_group text-box'>
+                    <a href="/generate"  className="btn btn-white btn-animate">Descargar PDF</a>
+                    <a href="/send"  className="btn btn-white btn-animate">Enviar PDF</a>
                 </div>
                 </div>
                 
                 <span id='print_to_pdf'>
-                    <Table >
+                <div id="DataTable">
+                 <div id="table_box_bootstrap"></div>
+                    <table >
                         <thead>
                             <tr>
-                                <th>Index</th>
                                 <th>Product Name:</th>
+                                <th>Ref:</th>
                                 <th>Price</th>
-                                <th>Qty</th>
+                                <th >Qty</th>
                                 <th id='hidden'>Options</th>
+                                <th className='button_hide '></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {
-                                this.state.products.map((item, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>{index}</td>
-                                            <td>{item.product_name}</td>
-                                            <td>{item.price}</td>
-                                            <td>{item.qty}</td>
-                                            <td>
-                                                <button  className='button_hide btn btn-success' onClick={event => this.increQty(event)} value={index}>+</button>
-                                                
-                                                <button  className='button_hide btn btn-danger' onClick={event => this.decreQty(event)} value={index}>-</button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })
+                        <tbody className="scroll-pane">
+                        {this.state.products.map((item, index) => {
+                                  return (
+                                      <tr key={index}>
+                                          <td>{item.name}</td>
+                                          <td>{item.ref}</td>
+                                          {
+                                            (() => {
+                                                if(!item.price) {
+                                                        return (
+                                                          <td>{item.value}</td>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                          <td>{item.price}</td>
+                                                        )
+                                                    }
+                                            })()  
+                                          }
+                                          {
+                                            (() => {
+                                                if(!item.qty) {
+                                                        return (
+                                                          <td>{item.amount}</td>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                          <td onChange={this.onChangeQty}>{item.qty}</td>
+                                                        )
+                                                    }
+                                            })()  
+                                          }
+                                          <td className='t_hide  text-center'>
+                                              <button  className='button_hide btn btn-white btn-animate green' onClick={event => this.increQty(event)} value={index}>+</button>
+                                              
+                                              <button  className='button_hide btn btn-white btn-animate red' onClick={event => this.decreQty(event)} value={index}>-</button>
+                                          </td>
+                                          <td className='t_hide'>
+                                          <button className="button_hide btn btn-primary btn-danger" onClick={event => this.delete(event)} value={index} > Eliminar</button>
+                                          </td>
+                                      </tr>
+                                  )
+                              })
                             }
                         </tbody>
-                    </Table>
+                    </table>
+                  </div>
                 </span>
                 
             </div>            

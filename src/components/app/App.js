@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Routes, Route, Link, useParams } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import AuthService from "../../services/auth.service";
+import { Navbar, Nav } from 'react-bootstrap'
 
 import Login from "../login/Login";
 import Register from "../register/Register";
@@ -13,18 +14,21 @@ import Profile from "../profile/Profile";
 import BoardUser from "../dashboard/Board-user";
 import BoardAdmin from "../dashboard/Board-admin";
 import PdfComponent from '../pdf/PdfComponent';
-
+import DataComponent from '../inventory/DataComponent';
+import SendComponent from '../inventory/SendComponent';
 import AddInventory from '../inventory/classComponent';
 import EditPrise from "../register/EditPrise";
+
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.logOut = this.logOut.bind(this);
-
+    
     this.state = {
       showAdminBoard: false,
       currentUser: undefined,
+      menuToggle: false
     };
   }
 
@@ -37,6 +41,7 @@ class App extends Component {
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
+
   }
 
   logOut() {
@@ -51,30 +56,34 @@ class App extends Component {
     const { currentUser, showAdminBoard } = this.state;
     return (
       <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <Navbar className="navbar navbar-expand navbar-border">
           <Link to={"/"} className="navbar-brand">
             Lite-thinking
           </Link>
+          <Navbar.Toggle />
           <div className="navbar-nav mr-auto">
-            <li className="nav-item">
+            <li className="nav-item active ">
               <Link to={"/home"} className="nav-link">
                 Home
               </Link>
             </li>
 
-            <li className="nav-item">
-              <Link to={"/addinventory"} className="nav-link">
-                Agregar Inventario
-              </Link>
-            </li>
-
+            
 
             {showAdminBoard && (
+              <div className=" ml-auto">
+               <li className="nav-item">
+                <Link to={"/addinventory"} className="nav-link">
+                  Agregar Inventario
+                </Link>
+              </li>
+
               <li className="nav-item">
                 <Link to={"/admin"} className="nav-link">
                   Admin Board
                 </Link>
               </li>
+              </div>
             )}
 
             {currentUser && (
@@ -84,6 +93,7 @@ class App extends Component {
                 </Link>
               </li>
             )}
+            
           </div>
 
           {currentUser ? (
@@ -114,7 +124,7 @@ class App extends Component {
               </li>
             </div>
           )}
-        </nav>
+        </Navbar>
 
         <div className="container mt-3">
           <Routes>
@@ -128,6 +138,8 @@ class App extends Component {
             <Route path="/admin" element={<BoardAdmin />} />
             <Route path="/addinventory" element={<AddInventory />} />
             <Route path="/pdf" element={<PdfComponent />} />
+            <Route path="/generate" element={<DataComponent />} />
+            <Route path="/send" element={<SendComponent />} />
             <Route path="/editprise/:slug" element={<EditPrise />}  />
           </Routes>
         </div>
