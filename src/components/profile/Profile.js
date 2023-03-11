@@ -46,10 +46,10 @@ export default class Profile extends Component {
           {currentUser.id}
         </p>
         <p>
-          <strong>Email:</strong>{" "}
+          <strong>Correo:</strong>{" "}
           {currentUser.email}
         </p>
-        <strong>Authorities:</strong>
+        <strong>Autoridades:</strong>
         <ul>
           {currentUser.roles &&
             currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
