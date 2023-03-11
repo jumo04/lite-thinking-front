@@ -64,7 +64,7 @@ class App extends Component {
           <div className="navbar-nav mr-auto">
             <li className="nav-item active ">
               <Link to={"/home"} className="nav-link">
-                Home
+                Inicio
               </Link>
             </li>
 
@@ -80,7 +80,7 @@ class App extends Component {
 
               <li className="nav-item">
                 <Link to={"/admin"} className="nav-link">
-                  Admin Board
+                  Tablero de administrador
                 </Link>
               </li>
               </div>
@@ -89,7 +89,7 @@ class App extends Component {
             {currentUser && (
               <li className="nav-item">
                 <Link to={"/user"} className="nav-link">
-                  User
+                  Empresas para usuarios
                 </Link>
               </li>
             )}

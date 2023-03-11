@@ -139,7 +139,7 @@ export default class Register extends Component {
             {!this.state.successful && (
               <div>
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="username">Usuario</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -151,7 +151,7 @@ export default class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">Correo</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -163,7 +163,7 @@ export default class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">Contraseña</label>
                   <Input
                     type="password"
                     className="form-control"
@@ -175,7 +175,7 @@ export default class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <button className="btn btn-primary btn-block">Sign Up</button>
+                  <button className="btn btn-primary btn-block">Registrarse</button>
                 </div>
               </div>
             )}
